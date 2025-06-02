@@ -9,6 +9,7 @@ const authConfig: NextAuthOptions = {
   session: {
     strategy: "jwt", // required to use JWT sessions
   },
+  
   callbacks: {
     async redirect({ url, baseUrl }) {
       return baseUrl; // or hardcoded if needed
