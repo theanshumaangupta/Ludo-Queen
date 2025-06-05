@@ -14,13 +14,13 @@ export default function Lobby({ roomData }: { roomData: RoomDataType }) {
             </div>
           </div>
 
-          {roomData.host?.name !== roomData.client?.name && (
+          {/* {roomData.host?.name !== roomData.client?.name && (
             <div className="border flex justify-between hover:scale-x-[1.01] transition-all rounded-lg px-6 py-3 bg-[#111111] border-gray-500/20">
               <div className="flex gap-2">
                 {roomData.client?.name.toLocaleUpperCase()}
               </div>
             </div>
-          )}
+          )} */}
           {roomData.arenaDetailsList.map((e : any) => {
             if(e.player.id==roomData?.host?.id)return
 
