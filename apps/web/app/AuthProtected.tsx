@@ -1,5 +1,5 @@
-import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation"; // use this in app directory
+import { getServerSession } from "next-auth";
 import authConfig from "../auth-config";
 
 export default async function AuthProtected(params: any) {
