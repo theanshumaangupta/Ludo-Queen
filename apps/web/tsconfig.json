@@ -9,10 +9,13 @@
   },
   "include": [
     "**/*.ts",
-    "**/*.tsx",
     "next-env.d.ts",
+    "**/*.tsx",
     "next.config.ts",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "types/next-auth.d.ts" // <-- add this line
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules"
+  ]
 }

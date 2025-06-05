@@ -1,5 +1,6 @@
 "use client"
 import { useState } from "react";
+import createRoom from "../action/homeActions"
 
 export default function Home() {
     const [arenaCode, setArenaCode] = useState("");
@@ -17,7 +18,7 @@ export default function Home() {
                 </div>
                 < div className="parition bg-gray-800 h-[2px] w-[80px] my-[2px]" >
                 </div>
-                < button
+                < button onClick={createRoom}
                     className={`relative text-white w-full bg-black border border-gray-500/20 rounded-xl transition-200 my-2 px-4 py-3`}>
                     Create Arena
                 </button>

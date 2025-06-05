@@ -1,6 +1,6 @@
 import { NextAuthOptions } from "next-auth";
 import CredentialProviders from "next-auth/providers/credentials";
-import {PrismaClient} from "@prisma/client"
+import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 console.log(process.env.NEXTAUTH_SECRET);
 
@@ -9,11 +9,22 @@ const authConfig: NextAuthOptions = {
   session: {
     strategy: "jwt", // required to use JWT sessions
   },
-  
+
   callbacks: {
-    async redirect({ url, baseUrl }) {
-      return baseUrl; // or hardcoded if needed
+    async jwt({ token, user }) {
+      // When user logs in, attach id to the token
+      if (user) {
+        token.id = String(user.id);
+      }
+      return token;
     },
+    async session({ session, token }) {
+      // Attach token.id to session.user
+      if (session.user && token.id) {
+        session.user.id = token.id as string ;
+      }
+      return session;
+    }
   },
   providers: [
     CredentialProviders({
@@ -29,8 +40,9 @@ const authConfig: NextAuthOptions = {
             password: cred?.password,
           },
         });
+
         if (existingUser) {
-          return { ...existingUser,id: String(existingUser.id) };
+          return { ...existingUser, id: String(existingUser.id) }; // make sure id is string
         }
         return null;
       },

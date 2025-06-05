@@ -12,9 +12,53 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+enum Colors {
+  RED
+  BLUE
+  GREEN
+  YELLOW
+}
+enum Status {
+  ACTIVE
+  WAITING
+  ENDED
+}
 model User {
-  id       Int     @id @default(autoincrement())
-  name     String?
-  username String  @unique @default("")
-  password String
+  id           Int            @id @default(autoincrement())
+  name         String?
+  username     String         @unique @default("")
+  password     String
+  profile      Profile?
+  ArenaDetails ArenaDetails[]
+  Arena        Arena?
+}
+
+model Profile {
+  id     Int  @id @default(autoincrement())
+  user   User @relation(fields: [userId], references: [id])
+  userId Int  @unique
+  point  Int  @default(0)
+}
+
+model Arena {
+  id           Int            @id @default(autoincrement())
+  code         String         @unique
+  status       Status
+  ArenaDetails ArenaDetails[]
+  host         User           @relation(fields: [userId], references: [id])
+  userId       Int            @unique
+  boardState   Json      
+}
+
+model ArenaDetails {
+  id Int @id @default(autoincrement())
+
+  player   User @relation(fields: [playerId], references: [id])
+  playerId Int
+
+  arena   Arena @relation(fields: [arenaId], references: [id])
+  arenaId Int
+
+  color Colors
 }
