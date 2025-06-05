@@ -17,7 +17,7 @@ export default function RootLayout({
   return (
     <Provider>
     <html lang= "en" >
-    <body className={ `${geist.className} overflow-hidden` }> { children } </body>
+    <body className={ `${geist.className} ` }> { children } </body>
       </html>
       </Provider>
   );
