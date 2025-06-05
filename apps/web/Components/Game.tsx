@@ -88,11 +88,20 @@ class Player {
     end_position: number;
     safe_home_arr: [number, number][];
     c: CanvasRenderingContext2D;
+    home_cord: [number, number];
+    lockedPiecesCords: [number, number][];
     constructor(color: Colors, c: CanvasRenderingContext2D) {
         this.color = color;
         this.pieces = new Array(4).fill(getNewPiece(color));
         this.begin_postion = COLOR_DATA[color].begin_postion;
         this.end_position = COLOR_DATA[color].end_position;
+        this.home_cord = COLOR_DATA[this.color as Colors].home_cord;
+        this.lockedPiecesCords = [
+            [this.home_cord[0] + (HOME_SIZE / 4), this.home_cord[1] + (HOME_SIZE / 4)],
+            [this.home_cord[0] + HOME_SIZE - (HOME_SIZE / 4), this.home_cord[1] + (HOME_SIZE / 4)],
+            [this.home_cord[0] + (HOME_SIZE / 4), this.home_cord[1] + HOME_SIZE - (HOME_SIZE / 4)],
+            [this.home_cord[0] + HOME_SIZE - (HOME_SIZE / 4), this.home_cord[1] + HOME_SIZE - (HOME_SIZE / 4)],
+        ]
         let safe_home_arr: [number, number][] = [];
         switch (this.color) {
             case Colors.RED:
@@ -120,10 +129,34 @@ class Player {
 
     }
     draw_pieces() {
+        let locked_pieces_count = 0;
         this.pieces.forEach((p) => {
+            switch (this.color) {
+                case Colors.RED:
+                    this.c.fillStyle = "#ff0000";
+                    break;
+                case Colors.BLUE:
+                    this.c.fillStyle = "#0000ff";
+                    break;
+                case Colors.GREEN:
+                    this.c.fillStyle = "#00ff00";
+                    break;
+                case Colors.YELLOW:
+                    this.c.fillStyle = "#ffff00";
+                    break;
+            }
             this.c.fillStyle = Colors[this.color as Colors];
-            // @ts-ignore
-            this.c.fillRect(PATH[p.position][0], PATH[p.position][1], blockSize, blockSize);
+            if (p.locked) {
+                this.c.beginPath();
+                // @ts-ignore
+                this.c.arc(this.lockedPiecesCords[locked_pieces_count][0], this.lockedPiecesCords[locked_pieces_count][1], blockSize / 1.5, 0, Math.PI * 2);
+                this.c.fill();
+                locked_pieces_count++;
+            }
+            else {
+                // @ts-ignore
+                this.c.fillRect(PATH[p.position][0], PATH[p.position][1], blockSize, blockSize);
+            }
         })
     }
     drawSafeHome() {
@@ -144,19 +177,19 @@ class Player {
 
 function DrawHouses(c: CanvasRenderingContext2D, canvas: HTMLCanvasElement) {
 
-    c.fillStyle = "#ff0000";
-    c.fillRect(0, 0, HOME_SIZE, HOME_SIZE);
+    c.strokeStyle = "#ff0000";
+    c.strokeRect(0, 0, HOME_SIZE, HOME_SIZE);
 
-    c.fillStyle = "#00ff00";
-    c.fillRect(canvas.width - HOME_SIZE, 0, HOME_SIZE, HOME_SIZE);
+    c.strokeStyle = "#00ff00";
+    c.strokeRect(canvas.width - HOME_SIZE, 0, HOME_SIZE, HOME_SIZE);
 
     // Blue
-    c.fillStyle = "#0000ff";
-    c.fillRect(canvas.width - HOME_SIZE, canvas.height - HOME_SIZE, HOME_SIZE, HOME_SIZE);
+    c.strokeStyle = "#0000ff";
+    c.strokeRect(canvas.width - HOME_SIZE, canvas.height - HOME_SIZE, HOME_SIZE, HOME_SIZE);
 
     // Yellow
-    c.fillStyle = "#ffff00";
-    c.fillRect(0, canvas.height - HOME_SIZE, HOME_SIZE, HOME_SIZE);
+    c.strokeStyle = "#ffff00";
+    c.strokeRect(0, canvas.height - HOME_SIZE, HOME_SIZE, HOME_SIZE);
 }
 
 function fillPathArray(canvas: HTMLCanvasElement) {
@@ -266,8 +299,11 @@ export default function() {
     }, [canvasRef, parentDivRef])
 
     return (
-        <div className="min-h-screen w-full" ref={parentDivRef} >
-            <canvas ref={canvasRef} />
+        <div className="flex items-center justify-between">
+            <button className="border-white border-4 rounded-xl p-4">DICE</button>
+            <div className="min-h-screen max-w-[40rem] w-full" ref={parentDivRef} >
+                <canvas ref={canvasRef} />
+            </div>
         </div>
     )
 }
