@@ -6,7 +6,7 @@ export default function Home() {
     return (
         < div className="w-full h-full flex flex-col justify-center min-h-screen items-center" >
             <div className="w-full max-w-[35rem] flex flex-col p-6 items-center justify-center" >
-                <h1 className="text-5xl my-8 kanit-black ">LUDO QUEEN</h1>
+                <h1 className="text-7xl my-8 kanit-black ">LUDO QUEEN</h1>
                 <div className="flex flex-col gap-2 w-full rounded-md" >
                     <input type="text" placeholder="Room Code Here" value={arenaCode} onChange={(e) => setArenaCode(e.target.value)
                     } className="w-full text-center outline-none bg-transparent  border-b p-2" />
