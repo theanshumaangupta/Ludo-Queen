@@ -1,8 +1,23 @@
 "use client"
 import { useState } from "react";
-import createRoom from "../action/homeActions"
+import createRoom, { joinRoom } from "../action/homeActions"
+import { redirect } from "next/navigation";
 
 export default function Home() {
+    async function joinAction(token:string) {
+        if (token.trim() == "") {
+            alert("please enter a valid room code")
+            return
+        }
+        let result = await joinRoom(token)
+        if (result != ""){
+            redirect(`/room/${token}`)
+            return
+        }else{
+            alert("No room Found")
+            return
+        }
+    }
     const [arenaCode, setArenaCode] = useState("");
     return (
         < div className="w-full h-full flex flex-col justify-center min-h-screen items-center" >
@@ -11,7 +26,7 @@ export default function Home() {
                 <div className="flex flex-col gap-2 w-full rounded-md" >
                     <input type="text" placeholder="Room Code Here" value={arenaCode} onChange={(e) => setArenaCode(e.target.value)
                     } className="w-full text-center outline-none bg-transparent  border-b p-2" />
-                    <button
+                    <button onClick={()=>joinAction(arenaCode)}
                         className={`relative bg-black text-white border border-gray-500/20 transition-200 my-2 px-4 py-3 rounded-lg flex-1`}>
                         Join Arena
                     </button>

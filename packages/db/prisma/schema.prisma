@@ -60,5 +60,5 @@ model ArenaDetails {
   arena   Arena @relation(fields: [arenaId], references: [id])
   arenaId Int
 
-  color Colors
+  color Colors?
 }

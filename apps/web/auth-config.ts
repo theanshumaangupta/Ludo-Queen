@@ -2,7 +2,7 @@ import { NextAuthOptions } from "next-auth";
 import CredentialProviders from "next-auth/providers/credentials";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
-console.log(process.env.NEXTAUTH_SECRET);
+
 
 const authConfig: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,

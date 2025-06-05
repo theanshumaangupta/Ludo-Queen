@@ -9,7 +9,7 @@ export default async function createRoom() {
   if (!session) {
     return;
   }
-  console.log(session);
+
   const str = Math.random().toString(36).substring(2, 7);
   const roomDetails = await prisma.arena.create({
     data: {
@@ -20,8 +20,26 @@ export default async function createRoom() {
     },
   });
   if (roomDetails) {
-    console.log("Room created");
     return str;
+  } else {
+    return "";
+  }
+}
+export async function joinRoom(token : string) {
+  const session = await getServerSession(authConfig);
+  if (!session) {
+    return;
+  }
+
+
+  const roomDetails = await prisma.arena.findUnique({
+    where: {
+      status: Status.ACTIVE,
+      code: token,
+    },
+  });
+  if (roomDetails) {
+    return token;
   } else {
     return "";
   }
