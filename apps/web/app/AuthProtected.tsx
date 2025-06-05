@@ -4,7 +4,6 @@ import authConfig from "../auth-config";
 
 export default async function AuthProtected(params: any) {
   const session = await getServerSession(authConfig);
-  console.log(session);
   if (!session) {
     redirect("/api/auth/signin"); // or your custom sign-in route
   }
