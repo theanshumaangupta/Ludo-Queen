@@ -1,4 +1,4 @@
-"use server"
+"use server";
 import { PrismaClient, Status } from "@prisma/client";
 import { getServerSession } from "next-auth";
 import authConfig from "../auth-config";
@@ -16,7 +16,7 @@ export default async function createRoom() {
       userId: Number(session.user.id),
       status: Status.ACTIVE,
       code: str,
-      boardState: {}
+      boardState: {},
     },
   });
   if (roomDetails) {
@@ -25,17 +25,39 @@ export default async function createRoom() {
     return "";
   }
 }
-export async function joinRoom(token : string) {
+export async function joinRoom(token: string) {
   const session = await getServerSession(authConfig);
   if (!session) {
     return;
   }
 
-
   const roomDetails = await prisma.arena.findUnique({
     where: {
       status: Status.ACTIVE,
       code: token,
+    },
+  });
+  if (roomDetails) {
+    return token;
+  } else {
+    return "";
+  }
+}
+export async function exitRoom(token: string) {
+  const session = await getServerSession(authConfig);
+  if (!session) {
+    return;
+  }
+
+  const arena = await prisma.arena.findUnique({
+    where: { code: token },
+    select: { id: true },
+  });
+  if (!arena?.id) return;
+  const roomDetails = await prisma.arenaDetails.deleteMany({
+    where: {
+      arenaId: arena?.id,
+      playerId: Number(session.user.id),
     },
   });
   if (roomDetails) {
