@@ -70,5 +70,5 @@ export default async function Page({ params }: any) {
   };
 
   //@ts-ignore
-  return <Lobby roomData={Roomdata} />;
+  return <Lobby roomData={ Roomdata } />;
 }
