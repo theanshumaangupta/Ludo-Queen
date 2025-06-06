@@ -4,7 +4,7 @@ import { getServerSession } from "next-auth";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 export type RoomDataType = {
-  token?: string;
+  token?: string | undefined;
   client?: {
     id: number;
     name: string;
@@ -15,7 +15,6 @@ export type RoomDataType = {
   };
   arenaDetailsList?: any;
 };
-let alredyJoined = false;
 export default async function Page({ params }: any) {
   const wait = await params;
   const token = wait.token
@@ -43,19 +42,15 @@ export default async function Page({ params }: any) {
   const session = await getServerSession(authConfig);
   if (
     !session ||
-    !session.user ||
     !session.user.name ||
     !arenaByToken?.host?.name
   ) {
     return;
   }
   // checking if the user is already joined or not
-  arenaByToken?.ArenaDetails.forEach((e) => {
-    if (e.playerId == Number(session?.user.id)) {
-      alredyJoined = true;
-    }
-  });
+  let alredyJoined = Array.from(arenaByToken.ArenaDetails).map(player => player.playerId).includes(Number(session.user.id));
   if (!alredyJoined) {
+    console.log(session.user.id);
     const newJoinee = await prisma.arenaDetails.create({
       data: {
         playerId: Number(session?.user?.id),
