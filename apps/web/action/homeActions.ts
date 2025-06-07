@@ -9,6 +9,16 @@ export default async function createRoom() {
   if (!session) {
     return;
   }
+  
+  try { 
+    await prisma.arena.deleteMany({
+      where : {
+        userId : Number(session.user.id),
+      }
+    })
+  }catch(err) {
+    null
+  }
 
   const str = Math.random().toString(36).substring(2, 7);
   const roomDetails = await prisma.arena.create({

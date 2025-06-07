@@ -31,7 +31,7 @@ model User {
   password     String
   profile      Profile?
   ArenaDetails ArenaDetails[]
-  Arena        Arena?
+  Arena        Arena[]
 }
 
 model Profile {
@@ -47,7 +47,7 @@ model Arena {
   status       Status
   ArenaDetails ArenaDetails[]
   host         User           @relation(fields: [userId], references: [id])
-  userId       Int            @unique
+  userId       Int            
   boardState   Json      
 }
 
