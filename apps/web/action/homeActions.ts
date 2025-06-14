@@ -9,15 +9,15 @@ export default async function createRoom() {
   if (!session) {
     return;
   }
-  
-  try { 
+
+  try {
     await prisma.arena.deleteMany({
-      where : {
-        userId : Number(session.user.id),
-      }
-    })
-  }catch(err) {
-    null
+      where: {
+        userId: Number(session.user.id),
+      },
+    });
+  } catch (err) {
+    null;
   }
 
   const str = Math.random().toString(36).substring(2, 7);
@@ -27,6 +27,12 @@ export default async function createRoom() {
       status: Status.ACTIVE,
       code: str,
       boardState: {},
+    },
+  });
+  await prisma.arenaDetails.create({  
+    data: {
+      arenaId: roomDetails.id,
+      playerId: Number(session.user.id),
     },
   });
   if (roomDetails) {
@@ -48,6 +54,12 @@ export async function joinRoom(token: string) {
     },
   });
   if (roomDetails) {
+    await prisma.arenaDetails.create({
+      data: {
+        arenaId: roomDetails.id,
+        playerId: Number(session.user.id),
+      },
+    });
     return token;
   } else {
     return "";
